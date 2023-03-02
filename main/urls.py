@@ -14,8 +14,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include, re_path
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.static import serve
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('blog/', include('blog.urls')),
+    path('', include('basecamp.urls')),
+    path('accounts/', include('allauth.urls')),
+    re_path(r'^static/(?P<path>.*)$', serve,
+            {'document_root': settings.STATIC_ROOT}),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.site.site_header = "EasyGo Administration"
+admin.site.site_title = "EasyGo Administration"
+admin.site.index_title = "EasyGo admin"
+admin.site.block_title = "EasyGo Admin"
